@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>订阅地址转换工具 - Sing-Box-XPlus</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; max-width: 900px; margin: auto; }
+    textarea { width: 100%; height: 200px; padding: 1rem; margin-bottom: 1rem; font-family: monospace; }
+    button { padding: 0.8rem 1.2rem; font-size: 1rem; background: #28a745; color: white; border: none; border-radius: 5px; }
+    button:hover { background: #218838; cursor: pointer; }
+    h1 { color: #444; }
+  </style>
+</head>
+<body>
+  <h1>🌐 订阅地址转换工具</h1>
+  <p>将你的订阅链接粘贴在下方，点击转换将解析并显示可用节点。</p>
+
+  <textarea id="subInput" placeholder="输入订阅地址或内容（支持 base64）"></textarea>
+  <button onclick="convertSub()">转换为节点</button>
+
+  <h2>节点结果：</h2>
+  <textarea id="output" placeholder="这里将显示节点信息" readonly></textarea>
+
+  <script>
+    function decodeBase64(str) {
+      try {
+        return decodeURIComponent(escape(window.atob(str)));
+      } catch (e) {
+        return "⚠️ 无法解码，请检查格式是否正确。";
+      }
+    }
+
+    function convertSub() {
+      let input = document.getElementById("subInput").value.trim();
+      let result = "";
+
+      if (/^https?:\/\//.test(input)) {
+        result = "⚠️ 暂不支持直接访问 URL，请先手动复制订阅内容";
+      } else {
+        const decoded = decodeBase64(input);
+        const lines = decoded.split("\n").filter(Boolean);
+        result = lines.map(line => decodeURIComponent(line)).join("\n");
+      }
+
+      document.getElementById("output").value = result;
+    }
+  </script>
+</body>
+</html>
