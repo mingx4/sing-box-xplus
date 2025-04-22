@@ -1,0 +1,31 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "inbounds": [
+    {
+      "type": "vless",
+      "listen": "::",
+      "listen_port": 443,
+      "users": [
+        {
+          "uuid": "fdf7e726-a168-e9dd-8b5e-b81647665ac4"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "ghg.mingx.dpdns.org",
+        "alpn": ["http/1.1"]
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/file_manager/search"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct"
+    }
+  ]
+}
