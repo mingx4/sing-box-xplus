@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Sing-Box 配置生成器</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; }
+    h1 { color: #333; }
+    input, select, textarea { width: 100%; margin-bottom: 1rem; padding: 0.5rem; font-size: 1rem; }
+    textarea { height: 300px; }
+    button { padding: 10px 20px; font-size: 1rem; background: #007BFF; color: white; border: none; border-radius: 5px; }
+    button:hover { background: #0056b3; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>🛠️ Sing-Box 配置生成器</h1>
+
+  <label>UUID</label>
+  <input type="text" id="uuid" value="fdf7e726-a168-e9dd-8b5e-b81647665ac4">
+
+  <label>域名 (server_name)</label>
+  <input type="text" id="server_name" value="ghg.mingx.dpdns.org">
+
+  <label>路径 (WebSocket Path)</label>
+  <input type="text" id="ws_path" value="/file_manager/search">
+
+  <label>监听端口 (Port)</label>
+  <input type="number" id="port" value="443">
+
+  <button onclick="generateConfig()">生成配置</button>
+
+  <h2>生成结果</h2>
+  <textarea id="output" readonly></textarea>
+
+  <script>
+    function generateConfig() {
+      const uuid = document.getElementById("uuid").value;
+      const server_name = document.getElementById("server_name").value;
+      const ws_path = document.getElementById("ws_path").value;
+      const port = parseInt(document.getElementById("port").value);
+
+      const config = {
+        "log": {
+          "level": "info"
+        },
+        "inbounds": [{
+          "type": "vless",
+          "listen": "::",
+          "listen_port": port,
+          "users": [{ "uuid": uuid }],
+          "tls": {
+            "enabled": true,
+            "server_name": server_name,
+            "alpn": ["http/1.1"]
+          },
+          "transport": {
+            "type": "ws",
+            "path": ws_path
+          }
+        }],
+        "outbounds": [{
+          "type": "direct"
+        }]
+      };
+
+      document.getElementById("output").value = JSON.stringify(config, null, 2);
+    }
+  </script>
+</body>
+</html>
